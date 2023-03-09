@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+
+message RawMeteoData {
+    int32 sensor_id = 1;
+    float temperature = 2;
+    float humidity = 3;
+    google.protobuf.Timestamp timestamp = 4;
+}
+
+message RawPollutionData {
+    int32 sensor_id = 1;
+    int32 co2 = 2;
+    google.protobuf.Timestamp timestamp = 3;
+}
+
+message LoadBalancer {
+    repeated string servers = 1;
+}
+
+message AirWellnessCoefficient {
+
+    float airwellness = 1;
+}
+
+message PollutionCoefficient {
+    float pollution = 1;
+}
+
+service SensorDataService {
+    rpc GetSensorData(SensorRequest) returns (SensorResponse) {}
+    rpc SendMeteoData(RawMeteoData) returns (google.protobuf.Empty) {}
+    rpc SendPollutionData(RawPollutionData) returns (google.protobuf.Empty) {}
+    rpc ProcessMeteoData(RawMeteoData) returns (AirWellnessCoefficient) {}
+    rpc ProcessPollutionData(RawPollutionData) returns (PollutionCoefficient) {}
+}
+
+message SensorRequest {
+    string sensor_id = 1;
+}
+
+message SensorResponse {
+    float temperature = 1;
+    float humidity = 2;
+    int32 co2 = 3;
+    google.protobuf.Timestamp timestamp = 4;
+}

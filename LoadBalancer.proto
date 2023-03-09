@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+message ServerAddress {
+    string serveraddress = 1;
+}
+
+message LoadBalancer {
+    repeated ServerAddress servers = 1;
+}
+
+service LoadBalancerService {
+    rpc ChooseServer(google.protobuf.Empty) returns (ServerAddress) {}
+}
