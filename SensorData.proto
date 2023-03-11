@@ -16,10 +16,6 @@ message RawPollutionData {
     google.protobuf.Timestamp timestamp = 3;
 }
 
-message LoadBalancer {
-    repeated string servers = 1;
-}
-
 message AirWellnessCoefficient {
 
     float airwellness = 1;

@@ -3,6 +3,8 @@ import SensorData_pb2
 import SensorData_pb2_grpc
 import LoadBalancer_pb2
 import LoadBalancer_pb2_grpc
+from google.protobuf import empty_pb2
+from datetime import datetime
 
 class Client:
 
@@ -13,7 +15,7 @@ class Client:
 
     def send_meteo_data(self, sensor_id, temperature, humidity, timestamp):
         # Get the server address from LB
-        server_address = self.lb_stub.ChooseServer(LoadBalancer_pb2.Empty()).serveraddress
+        server_address = self.lb_stub.ChooseServer(empty_pb2.Empty()).serveraddress
 
         # Create a gRPC channel to communicate with the server
         channel = grpc.insecure_channel(server_address)
@@ -49,6 +51,14 @@ class Client:
 
         # Call the RPC method to send the pollution data
         stub.SendPollutionData(pollution_data)
+
+if __name__ == "__main__":
+    client = Client()
+    sensor_id = 1
+    temperature = 20.5
+    humidity = 50.0
+    timestamp = datetime.now()
+    client.send_meteo_data(sensor_id, temperature, humidity, timestamp)
 
 
 
