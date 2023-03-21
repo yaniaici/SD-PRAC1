@@ -1,6 +1,6 @@
 import random
 import time
-
+import MeteoDataServer_grpc
 from numpy import linspace, searchsorted
 from scipy.stats import norm
 

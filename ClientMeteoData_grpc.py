@@ -5,6 +5,7 @@ import LoadBalancer_pb2
 import LoadBalancer_pb2_grpc
 from google.protobuf import empty_pb2
 from datetime import datetime
+import meteo_utils
 
 class Client:
 
@@ -35,9 +36,11 @@ class Client:
 
 if __name__ == "__main__":
     client = Client()
+
+    detector = meteo_utils.MeteoDataDetector()
     sensor_id = 1
-    temperature = 20.0
-    humidity = 50.0
+    temperature = detector.gen_temperature()
+    humidity = detector.gen_humidity()
     timestamp = datetime.now()
     client.send_meteo_data(sensor_id, temperature, humidity, timestamp)
 
