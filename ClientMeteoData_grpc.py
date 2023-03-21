@@ -33,29 +33,10 @@ class Client:
         # Call the RPC method to send the meteo data
         stub.SendMeteoData(meteo_data)
 
-    def send_pollution_data(self, data, sensor_id, co2, timestamp):
-        # Get the server address from LB
-        server_address = self.lb_stub.ChooseServer(LoadBalancer_pb2.Empty()).serveraddress
-
-        # Create a gRPC channel to communicate with the server provided by LB
-        channel = grpc.insecure_channel(server_address)
-
-        # Create a stub for the SensorData service
-        stub = SensorData_pb2_grpc.SensorDataServiceStub(channel)
-
-        # Create a RawPollutionData object and set fields
-        pollution_data = SensorData_pb2.RawPollutionData()
-        pollution_data.sensor_id = sensor_id
-        pollution_data.co2 = co2
-        pollution_data.timestamp.FromDatetime(timestamp)
-
-        # Call the RPC method to send the pollution data
-        stub.SendPollutionData(pollution_data)
-
 if __name__ == "__main__":
     client = Client()
     sensor_id = 1
-    temperature = 20.5
+    temperature = 20.0
     humidity = 50.0
     timestamp = datetime.now()
     client.send_meteo_data(sensor_id, temperature, humidity, timestamp)

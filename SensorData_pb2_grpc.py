@@ -40,6 +40,11 @@ class SensorDataServiceStub(object):
                 request_serializer=SensorData__pb2.RawPollutionData.SerializeToString,
                 response_deserializer=SensorData__pb2.PollutionCoefficient.FromString,
                 )
+        self.GetAirwellnessCoefficient = channel.unary_unary(
+                '/SensorDataService/GetAirwellnessCoefficient',
+                request_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+                response_deserializer=SensorData__pb2.AirWellnessCoefficient.FromString,
+                )
 
 
 class SensorDataServiceServicer(object):
@@ -75,6 +80,13 @@ class SensorDataServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def GetAirwellnessCoefficient(self, request, context):
+        """Returns the airwellness coefficient of the server
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_SensorDataServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -102,6 +114,11 @@ def add_SensorDataServiceServicer_to_server(servicer, server):
                     servicer.ProcessPollutionData,
                     request_deserializer=SensorData__pb2.RawPollutionData.FromString,
                     response_serializer=SensorData__pb2.PollutionCoefficient.SerializeToString,
+            ),
+            'GetAirwellnessCoefficient': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetAirwellnessCoefficient,
+                    request_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+                    response_serializer=SensorData__pb2.AirWellnessCoefficient.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -195,5 +212,22 @@ class SensorDataService(object):
         return grpc.experimental.unary_unary(request, target, '/SensorDataService/ProcessPollutionData',
             SensorData__pb2.RawPollutionData.SerializeToString,
             SensorData__pb2.PollutionCoefficient.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetAirwellnessCoefficient(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/SensorDataService/GetAirwellnessCoefficient',
+            google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+            SensorData__pb2.AirWellnessCoefficient.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
