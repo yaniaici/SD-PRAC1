@@ -4,6 +4,7 @@ import SensorData_pb2
 import SensorData_pb2_grpc
 import meteo_utils
 from google.protobuf import empty_pb2
+import redis
 
 class SensorDataService (SensorData_pb2_grpc.SensorDataServiceServicer):
 
@@ -14,10 +15,36 @@ class SensorDataService (SensorData_pb2_grpc.SensorDataServiceServicer):
         print("Temperature: " + str(request.temperature))
         print("Humidity: " + str(request.humidity))
         print("Timestamp: " + str(request.timestamp.ToDatetime()))
+        service = SensorDataService()
+        service.SendToRedisMeteo(request, context)
         return empty_pb2.Empty()
+    
+    def SendToRedisMeteo(self, request, context):
+        service = SensorDataService()
+        airwellness = service.ProcessMeteoDataRedis(request)
+        r = redis.StrictRedis(host='localhost', port=6379, db=0)
+        # Add key value pairs to Redis
+        r.hset(str(request.sensor_id) , str(request.timestamp), str(airwellness))
+        print("Values added to Redis:");
+        print(r.hgetall(str(request.sensor_id)))
+        r.close
+        return None
+
 
     # Process the meteo_data with meteo_utils.py
     def ProcessMeteoData(self, request, context):
+        meteo_data = SensorData_pb2.RawMeteoData()
+        meteo_data.sensor_id = request.sensor_id
+        meteo_data.temperature = request.temperature
+        meteo_data.humidity = request.humidity
+        meteo_data.timestamp.FromDatetime(request.timestamp.ToDatetime())
+        airwellness = meteo_utils.MeteoDataProcessor()
+        airwellness_procesado = airwellness.process_meteo_data(meteo_data)
+        print("Calculated air wellness index: " + str(airwellness_procesado))
+        return SensorData_pb2.AirWellnessCoefficient(airwellness=airwellness_procesado)
+    
+        # Process the meteo_data with meteo_utils.py  FOR REDIS SERVER
+    def ProcessMeteoDataRedis(self, request):
         meteo_data = SensorData_pb2.RawMeteoData()
         meteo_data.sensor_id = request.sensor_id
         meteo_data.temperature = request.temperature
