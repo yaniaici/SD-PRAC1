@@ -1,7 +1,6 @@
 import grpc
 import LoadBalancer_pb2
 import LoadBalancer_pb2_grpc
-import random
 from concurrent import futures
 
 class LoadBalancerServicer(LoadBalancer_pb2_grpc.LoadBalancerServiceServicer):

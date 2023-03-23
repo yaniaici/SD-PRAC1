@@ -1,8 +1,8 @@
 import grpc
 import SensorData_pb2
 import SensorData_pb2_grpc
-import LoadBalancer_pb2
 import LoadBalancer_pb2_grpc
+import LoadBalancer_pb2
 from google.protobuf import empty_pb2
 from datetime import datetime
 import meteo_utils
@@ -33,10 +33,9 @@ class Client:
 
         # Call the RPC method to send the meteo data
         stub.SendMeteoData(meteo_data)
-
+        
 if __name__ == "__main__":
     client = Client()
-
     detector = meteo_utils.MeteoDataDetector()
     sensor_id = 1
     temperature = detector.gen_temperature()
