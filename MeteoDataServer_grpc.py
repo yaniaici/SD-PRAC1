@@ -26,6 +26,7 @@ class SensorDataService (SensorData_pb2_grpc.SensorDataServiceServicer):
         # Add key value pairs to Redis
         r.hset(str(request.sensor_id) , str(request.timestamp), str(airwellness))
         print("Values added to Redis:");
+        # We use sensor_id as a key
         print(r.hgetall(str(request.sensor_id)))
         r.close
         return None
