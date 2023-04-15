@@ -31,8 +31,14 @@ service SensorDataService {
     rpc SendPollutionData(RawPollutionData) returns (google.protobuf.Empty) {}
     rpc ProcessMeteoData(RawMeteoData) returns (AirWellnessCoefficient) {}
     rpc ProcessPollutionData(RawPollutionData) returns (PollutionCoefficient) {}
-    // Returns the airwellness coefficient of the server
-    rpc GetAirwellnessCoefficient (google.protobuf.Empty) returns (AirWellnessCoefficient) {}
+}
+
+service ProxyReturnService {
+        // Returns the airwellness coefficient of the server
+        rpc GetAirwellnessCoefficient (google.protobuf.Empty) returns (AirWellnessCoefficient) {}
+        rpc GetAirPollutionCoefficient(google.protobuf.Empty) returns (PollutionCoefficient) {}
+        rpc SendAirWellnessCoefficient(AirWellnessCoefficient) returns (google.protobuf.Empty) {}
+        rpc SendAirPollutionCoefficient(PollutionCoefficient) returns (google.protobuf.Empty) {}
 }
 
 message SensorRequest {

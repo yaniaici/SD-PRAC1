@@ -15,7 +15,7 @@ class LoadBalancerServicer(LoadBalancer_pb2_grpc.LoadBalancerServiceServicer):
         return LoadBalancer_pb2.ServerAddress(serveraddress=server_address)
 
 def serve():
-    server_addresses = ['localhost:50051']
+    server_addresses = ['localhost:50051', 'localhost:50052']
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     LoadBalancer_pb2_grpc.add_LoadBalancerServiceServicer_to_server(LoadBalancerServicer(server_addresses), server)
     server.add_insecure_port('[::]:50053')
