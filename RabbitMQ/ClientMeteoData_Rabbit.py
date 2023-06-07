@@ -19,7 +19,7 @@ connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost')
 channel = connection.channel()
 
 # We use durable=true for error management purposes
-channel.queue_declare(queue='clientToServer', durable=True)
+channel.queue_declare(queue='dataToServer', durable=True)
 
 sensor = meteo_utils.MeteoDataDetector()
 meteo_data = sensor.analyze_air()
@@ -34,14 +34,14 @@ global_meteo_data = GlobalMeteoData('a', field1=meteo_data["temperature"], field
 message = json.dumps(vars(global_meteo_data))
 
 # We send the data
-channel.basic_publish(exchange='', routing_key='clientToServer', body=message, properties=pika.BasicProperties(delivery_mode=pika.spec.PERSISTENT_DELIVERY_MODE))
+channel.basic_publish(exchange='', routing_key='dataToServer', body=message, properties=pika.BasicProperties(delivery_mode=pika.spec.PERSISTENT_DELIVERY_MODE))
 
 print(" [x] Sent %r" % message)
 
 # We create a GlobalMeteoData object
 global_meteo_data = GlobalMeteoData('p', field1=pollution_data["co2"], field2=0, time=time.localtime())
 message = json.dumps(vars(global_meteo_data))
-channel.basic_publish(exchange='', routing_key='clientToServer', body=message, properties=pika.BasicProperties(delivery_mode=pika.spec.PERSISTENT_DELIVERY_MODE))
+channel.basic_publish(exchange='', routing_key='dataToServer', body=message, properties=pika.BasicProperties(delivery_mode=pika.spec.PERSISTENT_DELIVERY_MODE))
 
 print(" [x] Sent %r" % message)
 
